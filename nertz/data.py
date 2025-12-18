@@ -35,7 +35,6 @@ def parse_players() -> list[Player]:
     return players
 
 
-@st.cache_data
 def read_data() -> pd.DataFrame:
     df = pd.read_csv("Nertz.csv").dropna(subset=["Date"])
     df = df.reset_index()
@@ -52,8 +51,6 @@ def read_data() -> pd.DataFrame:
     df["Bad Thumb"] = df["Bad Thumb"].astype(bool)
     return df
 
-
-@st.cache_data
 def make_tall() -> pd.DataFrame:
     df = read_data()
     tall = df[["index", "Date"] + player_cols(df)].melt(

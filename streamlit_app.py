@@ -4,7 +4,7 @@ from nertz.cumulative import plot_cumulative
 from nertz.distributions import plot_distributions, plot_warmup
 from nertz.histograms import plot_histogram, plot_marginal_histogram, plot_ecdf
 from nertz.learning_curve import plot_learning, plot_learning_relation
-from nertz import explanation, learning_curve, num_players
+from nertz import explanation, learning_curve, num_players, players
 from nertz.pie import plot_piechart
 from nertz.polar import plot_polar
 from nertz.sankey import plot_sankey
@@ -15,10 +15,6 @@ from nertz.data import make_tall, make_stats, read_data, parse_players, player_c
 from nertz.style import enhanced_markdown
 import streamlit as st
 
-df = read_data()
-players = parse_players()
-assign_badges(df, players)
-tall = make_tall()
 
 st.set_page_config(
     page_title="Nertz", layout="wide", initial_sidebar_state=None, menu_items=None
@@ -28,11 +24,7 @@ st.title("A Statistical Analysis of Nertz")
 explanation.render()
 num_players.render()
 learning_curve.render()
-
-# st.subheader("Play Styles")
-# enhanced_markdown("""
-# What can we say about individual players and their styles?
-# """)
+players.render()
 
 # st.plotly_chart(plot_ecdf(tall))
 # st.plotly_chart(plot_cumulative(df))
@@ -49,7 +41,3 @@ learning_curve.render()
 # st.plotly_chart(plot_distributions_versus_third(df))
 # st.plotly_chart(plot_warmup(df))
 # st.plotly_chart(plot_sunburst(df))
-
-
-for player in players:
-    player.card()
