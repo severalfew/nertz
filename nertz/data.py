@@ -53,7 +53,9 @@ def read_data() -> pd.DataFrame:
     return df
 
 
-def make_tall(df):
+@st.cache_data
+def make_tall() -> pd.DataFrame:
+    df = read_data()
     tall = df[["index", "Date"] + player_cols(df)].melt(
         id_vars=["index", "Date"], var_name="Player", value_name="Score"
     )
