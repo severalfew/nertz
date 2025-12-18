@@ -1,5 +1,5 @@
 import streamlit as st
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, TemplateNotFound
 from marko import Markdown
 from marko import inline
 from marko.helpers import MarkoExtension
@@ -76,11 +76,14 @@ md = Markdown(extensions=[PlayerExtension])
 env = Environment(loader=FileSystemLoader("."), autoescape=False)
 
 
-def enhanced_markdown(path: str, **kwargs) -> None:
-    # Read markdown as template
-    template = env.get_template(path)
-    # Render Jinja2 template using kwargs
-    text = template.render(**kwargs)
+def enhanced_markdown(path_or_text: str, **kwargs) -> None:
+    try:
+        # Read markdown as template
+        template = env.get_template(path_or_text)
+        # Render Jinja2 template using kwargs
+        text = template.render(**kwargs)
+    except TemplateNotFound:
+        text = path_or_text
     # Convert to html
     html = md.convert(text)
     # Write to streamlit
