@@ -1,1 +1,8 @@
+marko
+pandas
+plotly
+pydantic
+scipy
+statsmodels
 streamlit
+streamlit-card
