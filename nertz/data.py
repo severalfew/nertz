@@ -24,7 +24,18 @@ def make_stats(data: pd.DataFrame) -> dict:
 
 @st.cache_data
 def parse_players() -> list[Player]:
-    names = ["Joan", "Mo", "Radmar", "Phil", "Becca", "ThiThoa", "David", "Tri"]
+    names = [
+        "Joan",
+        "Mo",
+        "Radmar",
+        "Phil",
+        "Becca",
+        "ThiThoa",
+        "David",
+        "Tri",
+        "Mallory",
+        "Jack",
+    ]
     players = []
     for name in names:
         player = Player(
@@ -50,6 +61,7 @@ def read_data() -> pd.DataFrame:
     df["Next2"] = df.Winner.shift(2)
     df["Bad Thumb"] = df["Bad Thumb"].astype(bool)
     return df
+
 
 def make_tall() -> pd.DataFrame:
     df = read_data()

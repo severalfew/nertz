@@ -16,6 +16,8 @@ colormap = {
     "ThiThoa": "#fccde5",
     "David": "#ffffb3",
     "Tri": "#d9d9d9",
+    "Jack": "#b22222",
+    "Mallory": "#bc80bd",
     "Phil+Becca": "#ccebc5",
     "Draw": "#d9d9d9",
     "Tie": "#d9d9d9",
