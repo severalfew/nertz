@@ -46,7 +46,7 @@ enhanced_markdown(
 About half of players showed a general improvement, but the other half show a regressive trend. In fact, high-scoring
 players are more likely to show a decrease in score over time. We throw out all players with fewer than 8 games and plot
 the slope vs y-intercept of the rest. The higher your y-intercept (score on your first game), the more likely your
-scores are to regress down to a lower value.
+scores are to regress down to a lower value. Sorry, Becca, your high scores were probably just a statistical anomaly!
 """
 )
 st.plotly_chart(plot_learning_relation(tall))
