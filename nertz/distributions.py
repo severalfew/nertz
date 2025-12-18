@@ -1,7 +1,7 @@
 from plotly.graph_objs import Figure
 import plotly.figure_factory as ff
-from data import read_data, parse_players
-from style import colormap, player_cols, plotly_to_html
+from nertz.data import read_data, parse_players
+from nertz.style import colormap, player_cols, plotly_to_html
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go

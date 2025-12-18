@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from models import Player
+from nertz.models import Player
 import numpy as np
 import pandas as pd
 import scipy.stats as stats

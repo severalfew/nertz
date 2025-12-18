@@ -1,5 +1,5 @@
-from data import read_data, make_tall
-from style import colormap, player_cols
+from nertz.data import read_data, make_tall
+from nertz.style import colormap, player_cols
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go

@@ -1,4 +1,4 @@
-from data import read_data
+from nertz.data import read_data
 import plotly.graph_objects as go
 
 

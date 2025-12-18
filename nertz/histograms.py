@@ -1,6 +1,6 @@
-from data import read_data
+from nertz.data import read_data
 from plotly.graph_objects import Figure
-from style import colormap, player_cols
+from nertz.style import colormap, player_cols
 import pandas as pd
 import plotly.express as px
 import plotly.figure_factory as ff

@@ -1,5 +1,5 @@
-from models import Player
-from style import player_cols, colormap
+from nertz.models import Player
+from nertz.style import player_cols, colormap
 import pandas as pd
 import streamlit as st
 

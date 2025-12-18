@@ -1,5 +1,5 @@
-from data import read_data
-from style import colormap, player_cols
+from nertz.data import read_data
+from nertz.style import colormap, player_cols
 from scipy.spatial import ConvexHull
 import numpy as np
 import plotly.graph_objects as go

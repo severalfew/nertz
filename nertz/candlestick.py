@@ -1,5 +1,5 @@
-from data import read_data
-from style import colormap
+from nertz.data import read_data
+from nertz.style import colormap
 from dataclasses import dataclass
 import datetime
 import pandas as pd

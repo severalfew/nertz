@@ -1,5 +1,5 @@
-from data import read_data
-from style import colormap, player_cols, plotly_to_html
+from nertz.data import read_data
+from nertz.style import colormap, player_cols, plotly_to_html
 import plotly.graph_objects as go
 
 

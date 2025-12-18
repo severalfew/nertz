@@ -1,4 +1,4 @@
-from style import colormap
+from nertz.style import colormap
 import plotly.graph_objects as go
 
 
