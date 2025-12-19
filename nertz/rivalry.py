@@ -1,6 +1,6 @@
 from dataclasses import dataclass
-from nertz.data import read_data
-from nertz.style import colormap
+from nertz.data import read_data, parse_players
+from nertz.style import colormap, player_cols
 import datetime
 import pandas as pd
 import plotly.graph_objects as go
@@ -114,6 +114,38 @@ def transform_for_candlestick(df: pd.DataFrame) -> tuple[pd.DataFrame, list, lis
     return values, months, dividers
 
 
+def add_guests(
+    fig: go.Figure, data: pd.DataFrame, transformed: pd.DataFrame
+) -> go.Figure:
+    # Add info for which players played on a given day
+    sub = pd.merge(
+        transformed,
+        (
+            data.set_index("Date").groupby("Date")[player_cols(data)].count() > 0
+        ).reset_index(),
+    )
+    for i, row in sub.iterrows():
+        if row["Phil"] & row["Becca"]:
+            player = "Phil+Becca"
+        elif row["Tri"] & row["David"]:
+            player = "David+Tri"
+        else:
+            player = None
+            for p in parse_players():
+                if not row[p.name]:
+                    continue
+                player = p.name
+        if not player:
+            continue
+        date = row["Date"]
+        fig.add_vrect(
+            x0=transformed[transformed.Date == date].Day.iloc[0] - 0.5,
+            x1=transformed[transformed.Date == date].Day.iloc[0] + 0.5,
+            fillcolor=colormap[player],
+        )
+    return fig
+
+
 def plot_candlestick(df: pd.DataFrame) -> go.Figure:
     data, months, dividers = transform_for_candlestick(df)
     fig = go.Figure()
@@ -188,7 +220,7 @@ def plot_candlestick(df: pd.DataFrame) -> go.Figure:
     fig.add_annotation(
         x=len(data),
         y=10,
-        text=f"Teresa is winning ↑",
+        text=f"Teresa is winning 🡅",
         xanchor="right",
         yanchor="bottom",
         font=dict(color=colormap["Teresa"]),
@@ -197,17 +229,18 @@ def plot_candlestick(df: pd.DataFrame) -> go.Figure:
     fig.add_annotation(
         x=len(data),
         y=-10,
-        text=f"Stu is winning ↓",
+        text=f"Stu is winning 🡇",
         xanchor="right",
         yanchor="top",
         font=dict(color=colormap["Stu"]),
         showarrow=False,
     )
+    add_guests(fig, df, data)
     return fig
 
 
 def render() -> None:
     data = read_data()
     st.subheader("Teresa vs Stu")
-    st.plotly_chart(plot_sunburst(data))
+    # st.plotly_chart(plot_sunburst(data))
     st.plotly_chart(plot_candlestick(data))

@@ -19,6 +19,7 @@ colormap = {
     "Jack": "#b22222",
     "Mallory": "#bc80bd",
     "Phil+Becca": "#ccebc5",
+    "David+Tri": "#ffffb3",
     "Draw": "#d9d9d9",
     "Tie": "#d9d9d9",
     "Stu+Teresa": "#bc80bd",
