@@ -4,11 +4,10 @@ from nertz.cumulative import plot_cumulative
 from nertz.distributions import plot_distributions, plot_warmup
 from nertz.histograms import plot_histogram, plot_marginal_histogram, plot_ecdf
 from nertz.learning_curve import plot_learning, plot_learning_relation
-from nertz import explanation, learning_curve, num_players, players
+from nertz import explanation, learning_curve, num_players, players, rivalry
 from nertz.pie import plot_piechart
 from nertz.polar import plot_polar
 from nertz.sankey import plot_sankey
-from nertz.sunburst import plot_sunburst
 from nertz.ternary import plot_ternary, plot_distributions_versus_third
 from nertz.violin import plot_thumb_comparison, plot_violin
 from nertz.data import make_tall, make_stats, read_data, parse_players, player_cols
@@ -25,6 +24,7 @@ explanation.render()
 num_players.render()
 learning_curve.render()
 players.render()
+rivalry.render()
 
 # st.plotly_chart(plot_ecdf(tall))
 # st.plotly_chart(plot_cumulative(df))
@@ -40,4 +40,3 @@ players.render()
 # st.plotly_chart(plot_ternary(df))
 # st.plotly_chart(plot_distributions_versus_third(df))
 # st.plotly_chart(plot_warmup(df))
-# st.plotly_chart(plot_sunburst(df))

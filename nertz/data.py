@@ -46,6 +46,7 @@ def parse_players() -> list[Player]:
     return players
 
 
+@st.cache_data
 def read_data() -> pd.DataFrame:
     df = pd.read_csv("Nertz.csv").dropna(subset=["Date"])
     df = df.reset_index()
