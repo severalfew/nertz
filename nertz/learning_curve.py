@@ -1,5 +1,6 @@
 from nertz.data import make_tall
 from nertz.style import colormap, enhanced_markdown
+import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
@@ -9,16 +10,20 @@ import streamlit as st
 
 def plot_learning(tall: pd.DataFrame) -> go.Figure:
     sub = tall[~tall.Player.isin(["Stu", "Teresa"])]
-    sub["Game Number"] = sub.groupby("Player").cumcount() + 1
+    sub["Game Order"] = sub.groupby("Player").Player.transform(
+        lambda x: np.linspace(0, 1, len(x))
+    )
     fig = px.scatter(
         sub,
         facet_col="Player",
-        x="Game Number",
+        x="Game Order",
         y="Score",
         color="Player",
         color_discrete_map=colormap,
         trendline="ols",
+        title="Change in Player Score from First to Last Game Played",
     )
+    fig.update_xaxes(tickmode="array", tickvals=[0, 1], ticktext=["First", "Last"])
     return fig
 
 
