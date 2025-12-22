@@ -16,7 +16,11 @@ import streamlit as st
 
 
 st.set_page_config(
-    page_title="Nertz", layout="wide", initial_sidebar_state=None, menu_items=None
+    page_title="Nertz",
+    layout="wide",
+    initial_sidebar_state=None,
+    menu_items=None,
+    page_icon="♣️",
 )
 st.title("A Statistical Analysis of Nertz")
 
