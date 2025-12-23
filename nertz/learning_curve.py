@@ -45,6 +45,7 @@ def plot_learning_relation(tall: pd.DataFrame) -> go.Figure:
         trendline="ols",
         trendline_scope="overall",
         color_discrete_map=colormap,
+        title="High-Scoring Players Regress Toward Lower Scores and Vice-Versa",
     )
     return fig
 
