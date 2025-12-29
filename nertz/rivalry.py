@@ -3,6 +3,7 @@ from nertz.style import colormap, enhanced_markdown, player_cols
 from plotly.subplots import make_subplots
 import pandas as pd
 import plotly.graph_objects as go
+import plotly.express as px
 import streamlit as st
 
 
@@ -215,7 +216,7 @@ def plot_candlestick(df: pd.DataFrame) -> go.Figure:
     fig.add_annotation(
         x=teresa_best["Day"],
         y=teresa_best["Close"],
-        text=f"Teresa's biggest day: {teresa_best["Margin"]:.0f} pts",
+        text=f"Teresa's biggest day: {teresa_best['Margin']:.0f} pts",
         font=dict(color=colormap["Teresa"]),
         showarrow=True,
         arrowhead=0,
@@ -278,6 +279,19 @@ def plot_candlestick(df: pd.DataFrame) -> go.Figure:
     return fig
 
 
+def plot_margin(df: pd.DataFrame) -> go.Figure:
+    df["Margin of Victory"] = df.Marginal.abs()
+    sub = df[df["Winner"].isin(("Teresa", "Stu"))]
+    return px.ecdf(
+        sub,
+        y="Margin of Victory",
+        color="Winner",
+        marginal="histogram",
+        color_discrete_map=colormap,
+        ecdfnorm="percent",
+    )
+
+
 def render() -> None:
     data = read_data()
     st.subheader("Teresa vs Stu")
@@ -294,3 +308,13 @@ match.
     )
     st.plotly_chart(plot_sunbursts(data))
     st.plotly_chart(plot_candlestick(data))
+    enhanced_markdown(
+        """
+Seventy-five percent of games have a marginal score of 15 points or less. Of
+those games, Stu scores higher most often. However, for the remaining
+twenty-five percent of games, Teresa scores higher more frequently. Since the
+margin of victory is much higher, she needs fewer victories to get a total high
+score!
+"""
+    )
+    st.plotly_chart(plot_margin(data))
