@@ -228,7 +228,7 @@ def plot_candlestick(df: pd.DataFrame) -> go.Figure:
     fig.add_annotation(
         x=stu_best["Day"],
         y=stu_best["Close"],
-        text=f"Stu's biggest day: {abs(stu_best["Margin"]):.0f} pts",
+        text=f"Stu's biggest day: {abs(stu_best['Margin']):.0f} pts",
         font=dict(color=colormap["Stu"]),
         showarrow=True,
         ay=40,
