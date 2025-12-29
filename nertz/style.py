@@ -1,3 +1,4 @@
+import pandas as pd
 import streamlit as st
 from jinja2 import Environment, FileSystemLoader, TemplateNotFound
 from marko import Markdown
@@ -27,8 +28,11 @@ colormap = {
 }
 
 
-def player_cols(df):
-    return [col for col in df if col in colormap.keys()]
+def player_cols(df: pd.DataFrame, only_guests: bool = False) -> list[str]:
+    vals = [col for col in df if col in colormap.keys()]
+    if only_guests:
+        vals = [col for col in vals if col not in ("Stu", "Teresa")]
+    return vals
 
 
 def plotly_to_html(filehandle, fig, include_plotlyjs=False):

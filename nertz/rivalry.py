@@ -1,13 +1,53 @@
-from dataclasses import dataclass
 from nertz.data import read_data, parse_players
-from nertz.style import colormap, player_cols
-import datetime
+from nertz.style import colormap, enhanced_markdown, player_cols
+from plotly.subplots import make_subplots
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
 
-def plot_sunburst(df: pd.DataFrame) -> go.Figure:
+def plot_sunbursts(df: pd.DataFrame) -> go.Figure:
+    fig = make_subplots(
+        rows=1,
+        cols=3,
+        specs=[
+            [
+                {"type": "domain"},
+                {"type": "domain"},
+                {"type": "domain"},
+            ]
+        ],
+        subplot_titles=[
+            "Who Finished First?",
+            "Who Scored the Most Points?",
+            "Combined",
+        ],
+    )
+
+    values = df.Nertz.dropna().value_counts()
+    fig.add_trace(
+        go.Pie(
+            values=values,
+            labels=values.index,
+            texttemplate=[f"{key}: {value}" for key, value in values.to_dict().items()],
+            marker_colors=[colormap[col] for col in values.index],
+        ),
+        row=1,
+        col=1,
+    )
+
+    values = df.Winner.dropna().value_counts()
+    fig.add_trace(
+        go.Pie(
+            values=values,
+            labels=values.index,
+            texttemplate=[f"{key}: {value}" for key, value in values.to_dict().items()],
+            marker_colors=[colormap[col] for col in values.index],
+        ),
+        row=1,
+        col=2,
+    )
+
     path = ["Nertz", "Winner"]
     sub = df[path].dropna().reset_index()
     sub = sub.groupby(path).count().rename(columns={"index": "count"}).reset_index()
@@ -33,7 +73,7 @@ def plot_sunburst(df: pd.DataFrame) -> go.Figure:
         colors.append(colormap[row.Winner])
         values.append(row.count)
 
-    fig = go.Figure(
+    fig.add_trace(
         go.Sunburst(
             ids=ids,
             labels=labels,
@@ -41,10 +81,9 @@ def plot_sunburst(df: pd.DataFrame) -> go.Figure:
             marker=dict(colors=colors),
             values=values,
             branchvalues="total",
-        )
-    )
-    fig.update_layout(
-        margin=dict(t=0, l=0, r=0, b=0), uniformtext=dict(minsize=14, mode="hide")
+        ),
+        row=1,
+        col=3,
     )
 
     return fig
@@ -242,5 +281,16 @@ def plot_candlestick(df: pd.DataFrame) -> go.Figure:
 def render() -> None:
     data = read_data()
     st.subheader("Teresa vs Stu")
-    # st.plotly_chart(plot_sunburst(data))
+    enhanced_markdown(
+        f"""
+So, who won the two-year Nertz war, Teresa or Stu? It's a difficult question to
+answer, since success can be measured in several ways. For starters, who got
+"Nertz" the most times (finished the game by clearing their hand)? Who scored
+the most points? It's possible to finish first, but not have the highest score,
+a situation I like to call the "Viktor Krum". It's a reference to the Harry
+Potter Quidditch match when Bulgaria catches the snitch but Ireland wins the
+match.
+"""
+    )
+    st.plotly_chart(plot_sunbursts(data))
     st.plotly_chart(plot_candlestick(data))
