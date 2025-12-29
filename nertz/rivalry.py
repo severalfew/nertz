@@ -292,6 +292,53 @@ def plot_margin(df: pd.DataFrame) -> go.Figure:
     )
 
 
+def bucket(x):
+    result = 0
+    for i in range(1, 100, 5):
+        if i > x:
+            return f"{result}-{result+4}"
+        result = i
+    raise ValueError
+
+
+def plot_margin_sunbursts(df: pd.DataFrame) -> go.Figure:
+    df["Abs Margin"] = df.Marginal.abs()
+    titles = ["Teresa", "Stu"]
+    fig = make_subplots(
+        rows=1,
+        cols=2,
+        subplot_titles=[
+            f"{winner}'s Cumulative Positive Score by Victory Margin"
+            for winner in titles
+        ],
+        specs=[
+            [
+                {"type": "domain"},
+                {"type": "domain"},
+            ]
+        ],
+    )
+    for col, winner in enumerate(titles, start=1):
+        sub = df[df.Winner == winner]
+        values = sub.groupby("Abs Margin")["Abs Margin"].sum()
+        values.name = "Total Score"
+        values = values.reset_index()
+        values["Bucket"] = values["Abs Margin"].apply(bucket)
+        values["Color"] = values["Abs Margin"].copy()
+        values["Abs Margin"] = values["Abs Margin"].apply(lambda x: f"{x:g}")
+        values = values.sort_values(["Abs Margin", "Bucket"])
+        temp = px.sunburst(
+            values,
+            path=["Bucket", "Abs Margin"],
+            values="Total Score",
+            color="Color",
+            color_continuous_scale="blackbody",
+        )
+        fig.add_traces(list(temp.select_traces()), rows=1, cols=col)
+        fig.update_layout(coloraxis={"colorscale": "blackbody_r"})
+    return fig
+
+
 def render() -> None:
     data = read_data()
     st.subheader("Teresa vs Stu")
@@ -318,3 +365,4 @@ score!
 """
     )
     st.plotly_chart(plot_margin(data))
+    st.plotly_chart(plot_margin_sunbursts(data))
