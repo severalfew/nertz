@@ -320,22 +320,42 @@ def plot_margin_sunbursts(df: pd.DataFrame) -> go.Figure:
     )
     for col, winner in enumerate(titles, start=1):
         sub = df[df.Winner == winner]
-        values = sub.groupby("Abs Margin")["Abs Margin"].sum()
-        values.name = "Total Score"
-        values = values.reset_index()
-        values["Bucket"] = values["Abs Margin"].apply(bucket)
-        values["Color"] = values["Abs Margin"].copy()
-        values["Abs Margin"] = values["Abs Margin"].apply(lambda x: f"{x:g}")
-        values = values.sort_values(["Abs Margin", "Bucket"])
-        temp = px.sunburst(
-            values,
-            path=["Bucket", "Abs Margin"],
-            values="Total Score",
-            color="Color",
-            color_continuous_scale="blackbody",
+        single_df = sub.groupby("Abs Margin")["Abs Margin"].sum()
+        single_df.name = "Total Score"
+        single_df = single_df.reset_index()
+        single_df["Bucket"] = single_df["Abs Margin"].apply(bucket)
+        single_df["Color"] = single_df["Abs Margin"].copy()
+        single_df["Abs Margin"] = single_df["Abs Margin"].apply(lambda x: f"{x:g}")
+        labels = []
+        parents = []
+        values = []
+        colors = []
+        for label, grp in single_df.groupby("Bucket"):
+            labels.append(label)
+            parents.append("")
+            values.append(grp["Total Score"].sum())
+            colors.append((grp.Color.max() + grp.Color.min()) / 2)
+        for i, row in single_df.sort_values("Color").iterrows():
+            labels.append(row["Abs Margin"])
+            parents.append(row["Bucket"])
+            values.append(row["Total Score"])
+            colors.append(row["Color"])
+        fig.add_trace(
+            go.Sunburst(
+                labels=labels,
+                parents=parents,
+                values=values,
+                branchvalues="total",
+                marker=dict(
+                    colors=colors,
+                    colorscale="blackbody_r",
+                ),
+                hovertemplate="<b>Victory Margin: %{label} </b> <br> Total Score: %{value}",
+                name="",
+            ),
+            1,
+            col,
         )
-        fig.add_traces(list(temp.select_traces()), rows=1, cols=col)
-        fig.update_layout(coloraxis={"colorscale": "blackbody_r"})
     return fig
 
 
